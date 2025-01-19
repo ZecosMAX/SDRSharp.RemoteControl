@@ -11,17 +11,20 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SDRSharp.Common;
 using SDRSharp.Radio;
+using Yuujin.SDRSharp.RemoteControl.Plugins;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Yuujin.SDRSharp.RemoteControl.Forms
 {
     public partial class SocketsControlPanel : UserControl
     {
+        private RawSocketsControlPlugin _parent;
         private ISharpControl _control;
+
         private string? _statusText { get; set; }
         private int _statusCount { get; set; } = 0;
 
-        public SocketsControlPanel(ISharpControl control)
+        public SocketsControlPanel(ISharpControl control, RawSocketsControlPlugin parentPlugin)
         {
             _control = control;
             InitializeComponent();

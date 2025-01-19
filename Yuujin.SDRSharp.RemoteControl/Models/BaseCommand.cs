@@ -8,5 +8,7 @@ namespace Yuujin.SDRSharp.RemoteControl.Models
 {
     public class BaseCommand
     {
+        public string? CommandType { get; set; }
+        public object? Payload { get; set; }
     }
 }

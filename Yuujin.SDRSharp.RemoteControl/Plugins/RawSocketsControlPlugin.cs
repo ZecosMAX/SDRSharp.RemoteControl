@@ -8,13 +8,13 @@ namespace Yuujin.SDRSharp.RemoteControl.Plugins
 {
     public class RawSocketsControlPlugin : ISharpPlugin, ICanLazyLoadGui, ISupportStatus, IExtendedNameProvider
     {
-        private SocketsControlPanel _gui;
-        private ISharpControl _control;
+        private SocketsControlPanel _gui = null!;
+        private ISharpControl _control = null!;
 
         public string DisplayName => "Raw Sockets";
         public string Category => "Remote Control";
         public string MenuItemName => DisplayName;
-        public bool IsActive => _gui != null && _gui.Visible;
+        public bool IsActive => Controller != null && Controller.Status.HasFlag(SocketControllerStatus.Active);
 
         public SocketController? Controller { get; set; }
 
@@ -22,19 +22,21 @@ namespace Yuujin.SDRSharp.RemoteControl.Plugins
         {
             get
             {
-                LoadGui();
                 return _gui;
             }
         }
 
         public void LoadGui()
         {
-            _gui ??= new SocketsControlPanel(_control);
+            _gui ??= new SocketsControlPanel(_control, this);
         }
 
         public void Initialize(ISharpControl control)
         {
+            LoadGui();
             _control = control;
+
+            Controller = new SocketController();
         }
 
         public void Close()

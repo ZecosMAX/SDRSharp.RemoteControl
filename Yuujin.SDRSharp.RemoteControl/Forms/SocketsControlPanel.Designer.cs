@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             label1 = new Label();
             label2 = new Label();
             textBox1 = new TextBox();
@@ -37,6 +38,10 @@
             listenStartButton = new Button();
             stopServerButton = new Button();
             listenStopButton = new Button();
+            checkBox1 = new CheckBox();
+            connectedClientsLabel = new Label();
+            panel1 = new Panel();
+            toolTip1 = new ToolTip(components);
             SuspendLayout();
             // 
             // label1
@@ -127,10 +132,46 @@
             listenStopButton.Text = "Stop Listening";
             listenStopButton.UseVisualStyleBackColor = true;
             // 
+            // checkBox1
+            // 
+            checkBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            checkBox1.AutoSize = true;
+            checkBox1.CheckAlign = ContentAlignment.MiddleRight;
+            checkBox1.Location = new Point(77, 146);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(155, 19);
+            checkBox1.TabIndex = 11;
+            checkBox1.Text = "Notify connected clients";
+            toolTip1.SetToolTip(checkBox1, "Causes server to send the data to all connected clients about any parameter change (e.g. Frequency, Bandwidth, Modulation, etc...)");
+            checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // connectedClientsLabel
+            // 
+            connectedClientsLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            connectedClientsLabel.AutoSize = true;
+            connectedClientsLabel.BorderStyle = BorderStyle.FixedSingle;
+            connectedClientsLabel.Location = new Point(124, 176);
+            connectedClientsLabel.Name = "connectedClientsLabel";
+            connectedClientsLabel.Size = new Size(107, 17);
+            connectedClientsLabel.TabIndex = 12;
+            connectedClientsLabel.Text = "Connected clients:";
+            // 
+            // panel1
+            // 
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel1.BorderStyle = BorderStyle.Fixed3D;
+            panel1.Location = new Point(7, 188);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(225, 105);
+            panel1.TabIndex = 13;
+            // 
             // SocketsControlPanel
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(connectedClientsLabel);
+            Controls.Add(panel1);
+            Controls.Add(checkBox1);
             Controls.Add(listenStopButton);
             Controls.Add(stopServerButton);
             Controls.Add(listenStartButton);
@@ -140,9 +181,9 @@
             Controls.Add(textBox1);
             Controls.Add(label2);
             Controls.Add(label1);
-            MinimumSize = new Size(240, 450);
+            MinimumSize = new Size(240, 300);
             Name = "SocketsControlPanel";
-            Size = new Size(240, 450);
+            Size = new Size(240, 300);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -157,5 +198,9 @@
         private Button listenStartButton;
         private Button stopServerButton;
         private Button listenStopButton;
+        private CheckBox checkBox1;
+        private Label connectedClientsLabel;
+        private Panel panel1;
+        private ToolTip toolTip1;
     }
 }
