@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SocketsControlPanel));
             label1 = new Label();
             label2 = new Label();
             textBox1 = new TextBox();
@@ -70,6 +71,7 @@
             textBox1.Size = new Size(170, 23);
             textBox1.TabIndex = 4;
             textBox1.Text = "127.0.0.1:1604";
+            toolTip1.SetToolTip(textBox1, resources.GetString("textBox1.ToolTip"));
             textBox1.Validating += textBox1_Validating;
             // 
             // label3
@@ -142,7 +144,7 @@
             checkBox1.Size = new Size(155, 19);
             checkBox1.TabIndex = 11;
             checkBox1.Text = "Notify connected clients";
-            toolTip1.SetToolTip(checkBox1, "Causes server to send the data to all connected clients about any parameter change (e.g. Frequency, Bandwidth, Modulation, etc...)");
+            toolTip1.SetToolTip(checkBox1, "Causes server to send the data to all connected clients about any \r\nparameter change (e.g. Frequency, Bandwidth, Modulation, etc...)\r\n");
             checkBox1.UseVisualStyleBackColor = true;
             // 
             // connectedClientsLabel
@@ -150,11 +152,11 @@
             connectedClientsLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             connectedClientsLabel.AutoSize = true;
             connectedClientsLabel.BorderStyle = BorderStyle.FixedSingle;
-            connectedClientsLabel.Location = new Point(124, 176);
+            connectedClientsLabel.Location = new Point(128, 176);
             connectedClientsLabel.Name = "connectedClientsLabel";
-            connectedClientsLabel.Size = new Size(107, 17);
+            connectedClientsLabel.Size = new Size(104, 17);
             connectedClientsLabel.TabIndex = 12;
-            connectedClientsLabel.Text = "Connected clients:";
+            connectedClientsLabel.Text = "Connected clients";
             // 
             // panel1
             // 

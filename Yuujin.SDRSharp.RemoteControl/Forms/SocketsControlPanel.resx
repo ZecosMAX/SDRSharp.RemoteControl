@@ -120,4 +120,14 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="textBox1.ToolTip" xml:space="preserve">
+    <value>The address that the server will listen to new connections to
+If you want server to listen to ALL incoming connections, 
+set the address to 0.0.0.0:&lt;port&gt;
+
+However, it is advised to set the proper IP address.
+i.e. if you want to run this in local network set it to:
+192.168.XXX.XXX:&lt;port&gt;
+</value>
+  </data>
 </root>

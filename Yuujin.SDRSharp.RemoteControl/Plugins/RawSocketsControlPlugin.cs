@@ -11,7 +11,7 @@ namespace Yuujin.SDRSharp.RemoteControl.Plugins
         private SocketsControlPanel _gui = null!;
         private ISharpControl _control = null!;
 
-        public string DisplayName => "Raw Sockets";
+        public string DisplayName => "Socket Server";
         public string Category => "Remote Control";
         public string MenuItemName => DisplayName;
         public bool IsActive => Controller != null && Controller.Status.HasFlag(SocketControllerStatus.Active);
