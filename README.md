@@ -43,3 +43,7 @@ then you can follow next instructions...
 
 If by any reason the current build fails and/or you can't compile the project,\
 grab latest [release](https://github.com/ZecosMAX/SDRSharp.RemoteControl/releases) and copy files to your SDR# installation, into the `plugins` folder
+
+# Usage
+
+TBA...
