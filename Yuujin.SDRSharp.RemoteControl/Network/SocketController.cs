@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Yuujin.SDRSharp.RemoteControl.Models;
+using Yuujin.SDRSharp.RemoteControl.Common.Commands;
 
 namespace Yuujin.SDRSharp.RemoteControl.Network
 {
@@ -14,6 +14,10 @@ namespace Yuujin.SDRSharp.RemoteControl.Network
     {
         private CancellationTokenSource? _listenerCts;
         private TcpListener? _listener;
+
+        public event EventHandler OnClientConnected = null!;
+        public event EventHandler OnClientDisconnected = null!;
+        public event EventHandler OnStatusChanged = null!;
 
         public List<TcpClient> ConnectedClients { get; set; } = [];
         public bool IsBlocking { get; set; } = false;
@@ -71,6 +75,11 @@ namespace Yuujin.SDRSharp.RemoteControl.Network
                 newListener.Start();
                 _ = Task.Run(AcceptTask);
             }
+
+            try
+            {
+                OnStatusChanged?.Invoke(this, EventArgs.Empty);
+            } catch { }
         }
 
         private async Task AcceptTask()
@@ -86,6 +95,21 @@ namespace Yuujin.SDRSharp.RemoteControl.Network
                     ConnectedClients.Add(client);
 
                     _ = Task.Run(async () => { await RecieveTask(client); });
+
+                    if (ConnectedClients.Count == 1)
+                    {
+                        try
+                        {
+                            OnStatusChanged?.Invoke(this, EventArgs.Empty);
+                        } 
+                        catch { }
+                    }
+
+                    try
+                    {  
+                        OnClientConnected?.Invoke(this, EventArgs.Empty);
+                    }
+                    catch { }
                 }
             }
             catch { }

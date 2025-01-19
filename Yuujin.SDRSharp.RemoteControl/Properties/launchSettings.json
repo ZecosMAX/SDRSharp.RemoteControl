@@ -4,6 +4,11 @@
       "commandName": "Executable",
       "executablePath": "..\\..\\bin\\SDRSharp.exe",
       "workingDirectory": "..\\$(Configuration)\\$(TargetFramework)\\"
+    },
+    "Debug SDRSharp": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\Yuujin\\Desktop\\sdrsharp-x64-next\\SDRSharp.dotnet9.exe",
+      "workingDirectory": "C:\\Users\\Yuujin\\Desktop\\sdrsharp-x64-next"
     }
   }
 }

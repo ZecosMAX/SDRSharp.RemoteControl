@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SDRSharp.Common;
 using SDRSharp.Radio;
+using Yuujin.SDRSharp.RemoteControl.Network;
 using Yuujin.SDRSharp.RemoteControl.Plugins;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -18,6 +19,7 @@ namespace Yuujin.SDRSharp.RemoteControl.Forms
 {
     public partial class SocketsControlPanel : UserControl
     {
+        private SocketController? _socketController => _parent.Controller;
         private RawSocketsControlPlugin _parent;
         private ISharpControl _control;
 
@@ -27,10 +29,30 @@ namespace Yuujin.SDRSharp.RemoteControl.Forms
         public SocketsControlPanel(ISharpControl control, RawSocketsControlPlugin parentPlugin)
         {
             _control = control;
+            _parent = parentPlugin;
+
             InitializeComponent();
         }
 
         private void SetErrorStatus(string text)
+        {
+            statusLabel.ForeColor = Color.Red;
+            SetStatus(text);
+        }
+
+        private void SetGoodStatus(string text)
+        {
+            statusLabel.ForeColor = Color.Green;
+            SetStatus(text);
+        }
+
+        private void SetNeutralStatus(string text)
+        {
+            statusLabel.ForeColor = SystemColors.ControlText;
+            SetStatus(text);
+        }
+
+        private void SetStatus(string text)
         {
             if (_statusText != text)
             {
@@ -42,20 +64,7 @@ namespace Yuujin.SDRSharp.RemoteControl.Forms
                 _statusCount++;
             }
 
-            statusLabel.ForeColor = Color.Red;
             statusLabel.Text = $"Status: {text} {(_statusCount == 0 ? "" : $"{_statusCount}")}";
-
-            //JsonSerializer.Deserialize();
-        }
-
-        private void SetGoodStatus(string text)
-        {
-
-        }
-
-        private void SetNeutralStatus(string text)
-        {
-
         }
 
         private bool ValidateIpAddress(string ipAddress)
@@ -70,18 +79,6 @@ namespace Yuujin.SDRSharp.RemoteControl.Forms
             }
         }
 
-        private void textBox1_Validating(object sender, CancelEventArgs e)
-        {
-            var text = textBox1.Text;
-
-            if(!ValidateIpAddress(text))
-            {
-                e.Cancel = true;
-                SetErrorStatus($"Provided IP address is not valid");
-                return;
-            }
-        }
-
         private void startServerButton_Click(object sender, EventArgs e)
         {
             var address = textBox1.Text;
@@ -91,8 +88,11 @@ namespace Yuujin.SDRSharp.RemoteControl.Forms
                 SetErrorStatus($"Provided IP address is not valid");
                 return;
             }
-        }
 
-        
+            if (_socketController == null)
+                return;
+
+            _socketController.StartListen(IPEndPoint.Parse(address));
+        }
     }
 }

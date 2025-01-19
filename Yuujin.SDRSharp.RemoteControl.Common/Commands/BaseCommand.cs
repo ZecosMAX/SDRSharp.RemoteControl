@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Yuujin.SDRSharp.RemoteControl.Models
+namespace Yuujin.SDRSharp.RemoteControl.Common.Commands
 {
     public class BaseCommand
     {

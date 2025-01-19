@@ -72,7 +72,6 @@
             textBox1.TabIndex = 4;
             textBox1.Text = "127.0.0.1:1604";
             toolTip1.SetToolTip(textBox1, resources.GetString("textBox1.ToolTip"));
-            textBox1.Validating += textBox1_Validating;
             // 
             // label3
             // 
