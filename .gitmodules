@@ -1,0 +1,3 @@
+[submodule "SDRSharp.RemoteControl.Common"]
+	path = SDRSharp.RemoteControl.Common
+	url = git@github.com:ZecosMAX/SDRSharp.RemoteControl.Common.git
