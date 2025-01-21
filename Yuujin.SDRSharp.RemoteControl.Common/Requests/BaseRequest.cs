@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Yuujin.SDRSharp.RemoteControl.Common.Commands
+namespace Yuujin.SDRSharp.RemoteControl.Common.Requests
 {
-    public class BaseCommand
+    public class BaseRequest
     {
         public string? CommandType { get; set; }
         public object? Payload { get; set; }

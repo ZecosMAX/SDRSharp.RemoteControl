@@ -9,12 +9,12 @@ namespace Yuujin.SDRSharp.RemoteControl.Common.Messages
 {
     public class NetworkMessage
     {
-        public readonly ushort Header = 0x5A2D;
-        public int Id = 0;
-        public int Type = 0;
-        public int PayloadSize = 0;
-        public byte[] Payload = [];
-        public uint CRC32 = 0;
+        public static readonly ushort Header = 0x5A2D; // by accident unicode 0x5A2D = 娭 (Grandma). I'll leave it like that
+        public int Id { get; set; } = 0;
+        public int Type { get; set; } = 0;
+        public int PayloadSize => Payload.Length;
+        public byte[] Payload { get; set; } = [];
+        public uint CRC32 { get; set; } = 0;
 
         public virtual void InitializeFromByteArray(byte[] array)
         {
@@ -48,6 +48,20 @@ namespace Yuujin.SDRSharp.RemoteControl.Common.Messages
             byte[] crc32 = Crc32.Hash(bytes);
 
             return [..bytes, ..crc32];
+        }
+
+        public bool Verify()
+        {
+            byte[] bytes = [
+                ..BitConverter.GetBytes(Header),
+                ..BitConverter.GetBytes(Id),
+                ..BitConverter.GetBytes(Type),
+                ..BitConverter.GetBytes(PayloadSize),
+                ..Payload
+            ];
+
+            var crc32 = Crc32.HashToUInt32(bytes);
+            return crc32 == CRC32;
         }
     }
 }

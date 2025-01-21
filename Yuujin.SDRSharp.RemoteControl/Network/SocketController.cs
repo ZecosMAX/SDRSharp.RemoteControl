@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,7 +7,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Yuujin.SDRSharp.RemoteControl.Common.Commands;
+using Yuujin.SDRSharp.RemoteControl.Extensions;
+using Yuujin.SDRSharp.RemoteControl.Common.Messages;
+using Yuujin.SDRSharp.RemoteControl.Common.Responses;
 
 namespace Yuujin.SDRSharp.RemoteControl.Network
 {
@@ -20,7 +23,7 @@ namespace Yuujin.SDRSharp.RemoteControl.Network
         public event EventHandler OnClientDisconnected = null!;
         public event EventHandler OnStatusChanged = null!;
 
-        public List<TcpClient> ConnectedClients { get; set; } = [];
+        public ConcurrentDictionary<Guid, SocketClient> ConnectedClients { get; set; } = [];
 
         public bool IsBlocking { get => isBlocking; set { UpdateStatus(); isBlocking = value; } }
         public TcpListener? Listener { get => _listener; set { if (_listener != value) { var oldListener = _listener; _listener = value; OnListenerUpdated(oldListener, value); } } }
@@ -79,14 +82,7 @@ namespace Yuujin.SDRSharp.RemoteControl.Network
             UpdateStatus();
         }
 
-        private void UpdateStatus()
-        {
-            try
-            {
-                OnStatusChanged?.Invoke(this, EventArgs.Empty);
-            }
-            catch { }
-        }
+        private void UpdateStatus() => OnStatusChanged?.SafeInvoke(this, EventArgs.Empty);
 
         private async Task AcceptTask()
         {
@@ -98,44 +94,112 @@ namespace Yuujin.SDRSharp.RemoteControl.Network
                         return;
 
                     var client = await Listener.AcceptTcpClientAsync(_listenerCts.Token);
-                    ConnectedClients.Add(client);
 
-                    _ = Task.Run(async () => { await RecieveTask(client); });
+                    var guid = Guid.NewGuid();
+                    var socketClient = new SocketClient()
+                    { 
+                        Client = client,
+                        Guid = guid,
+                        CancellationTokenSource = new CancellationTokenSource(),
+                        LastMessage = DateTime.Now, 
+                    };
 
-                    if (ConnectedClients.Count == 1)
-                    {
-                        try
-                        {
-                            OnStatusChanged?.Invoke(this, EventArgs.Empty);
-                        } 
-                        catch { }
-                    }
-
-                    try
-                    {  
-                        OnClientConnected?.Invoke(this, EventArgs.Empty);
-                    }
-                    catch { }
+                    _ = Task.Run(async () => { await RecieveTask(socketClient); });
                 }
             }
             catch { }
         }
 
-        private async Task RecieveTask(TcpClient client)
+        private async Task RecieveTask(SocketClient client)
         {
             try
             {
-                using var stream = client.GetStream();
-                while (true)
+                using var stream = client.Client.GetStream();
+                while (!client.CancellationTokenSource.IsCancellationRequested)
                 {
-                    var command = await JsonSerializer.DeserializeAsync<BaseCommand>(stream);
+                    var message = await GetNetworkMessageAsync(stream, client.CancellationTokenSource.Token);
+                    
+                    if (message == null)
+                        continue;
+
+                    var respMessage = HandleMessage(client, message);
+
+                    if (respMessage != null)
+                        stream.Write(respMessage.ConvertToByteArray().AsSpan());
                 }
             }
             catch { }
             finally
             {
-                client.Close();
+                client.Client.Close();
+                if (ConnectedClients.TryRemove(client.Guid, out _))
+                {
+                    OnClientDisconnected?.SafeInvoke(this, EventArgs.Empty);
+                }
             }
+        }
+
+        private async Task<NetworkMessage?> GetNetworkMessageAsync(NetworkStream stream, CancellationToken cancellationToken)
+        {
+            var header = await stream.ReadTypeAsync<ushort>(cancellationToken);
+
+            if (header != NetworkMessage.Header)
+                return null;
+
+            var messageId = await stream.ReadTypeAsync<int>(cancellationToken);
+            var messageType = await stream.ReadTypeAsync<int>(cancellationToken);
+            var payloadSize = await stream.ReadTypeAsync<int>(cancellationToken);
+            var payload = new byte[payloadSize]!; await stream.ReadExactlyAsync(payload.AsMemory(), cancellationToken);
+            var crc32 = await stream.ReadTypeAsync<uint>(cancellationToken);
+
+            var message = new NetworkMessage()
+            {
+                Id = messageId,
+                Type = messageType,
+                Payload = payload,
+                CRC32 = crc32,
+            };
+
+            if (!message.Verify())
+                return null;
+
+            return message;
+        }
+
+        private NetworkMessage? HandleMessage(SocketClient client, NetworkMessage message)
+        {
+            // Handle handshaking the client
+            // if the client hasn't performed hanshaking yet
+            if (!ConnectedClients.ContainsKey(client.Guid))
+            {
+                // Expect a welcome message
+                // If it is not. Close the connection
+                if(message.Type != 1)
+                {
+                    client.CancellationTokenSource.Cancel();
+                    client.Client.Close();
+                    return null;
+                }
+
+                // Otherwise, accept client and send handshake verification
+                ConnectedClients.TryAdd(client.Guid, client);
+                OnClientConnected?.SafeInvoke(this, null!);
+
+
+                var verificationMessage = new WelcomeMessage
+                {
+                    Payload = new HandshakeVerificationResponse()
+                    {
+                        AssignedClientId = client.Guid,
+                        KeepaliveTimeout = 30,
+                        RequestId = Guid.Empty,
+                    }.ConvertToByteArray()
+                };
+
+                return verificationMessage;
+            }
+
+            return null;
         }
     }
 

@@ -10,7 +10,7 @@ namespace Yuujin.SDRSharp.RemoteControl.Common.Messages
     {
         public WelcomeMessage() 
         {
-            Type = 0;
+            Type = 1;
         }
     }
 }
