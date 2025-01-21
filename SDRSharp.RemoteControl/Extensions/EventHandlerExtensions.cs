@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Yuujin.SDRSharp.RemoteControl.Extensions
+namespace SDRSharp.RemoteControl.Extensions
 {
     public static class EventHandlerExtensions
     {

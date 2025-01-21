@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Yuujin.SDRSharp.RemoteControl.Common.Responses
+namespace SDRSharp.RemoteControl.Common.Responses
 {
     public class BaseResponse
     {

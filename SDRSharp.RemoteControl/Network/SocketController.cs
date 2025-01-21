@@ -7,11 +7,11 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Yuujin.SDRSharp.RemoteControl.Extensions;
-using Yuujin.SDRSharp.RemoteControl.Common.Messages;
-using Yuujin.SDRSharp.RemoteControl.Common.Responses;
+using SDRSharp.RemoteControl.Extensions;
+using SDRSharp.RemoteControl.Common.Messages;
+using SDRSharp.RemoteControl.Common.Responses;
 
-namespace Yuujin.SDRSharp.RemoteControl.Network
+namespace SDRSharp.RemoteControl.Network
 {
     public class SocketController
     {

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Yuujin.SDRSharp.RemoteControl.Forms;
-using Yuujin.SDRSharp.RemoteControl.Network;
+using SDRSharp.RemoteControl.Forms;
+using SDRSharp.RemoteControl.Network;
 
-namespace Yuujin.SDRSharp.RemoteControl.Plugins
+namespace SDRSharp.RemoteControl.Plugins
 {
     public class LogsPlugin : ISharpPlugin, ICanLazyLoadGui, ISupportStatus, IExtendedNameProvider
     {

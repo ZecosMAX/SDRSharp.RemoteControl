@@ -1,4 +1,4 @@
-﻿namespace Yuujin.SDRSharp.RemoteControl.Forms
+﻿namespace SDRSharp.RemoteControl.Forms
 {
     partial class RemoteControlLogView
     {

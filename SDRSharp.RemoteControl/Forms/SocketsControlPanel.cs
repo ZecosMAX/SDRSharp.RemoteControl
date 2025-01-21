@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SDRSharp.Common;
 using SDRSharp.Radio;
-using Yuujin.SDRSharp.RemoteControl.Network;
-using Yuujin.SDRSharp.RemoteControl.Plugins;
+using SDRSharp.RemoteControl.Network;
+using SDRSharp.RemoteControl.Plugins;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace Yuujin.SDRSharp.RemoteControl.Forms
+namespace SDRSharp.RemoteControl.Forms
 {
     public partial class SocketsControlPanel : UserControl
     {

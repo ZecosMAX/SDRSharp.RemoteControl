@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Yuujin.SDRSharp.RemoteControl.Common.Requests
+namespace SDRSharp.RemoteControl.Common.Requests
 {
     public class BaseRequest
     {

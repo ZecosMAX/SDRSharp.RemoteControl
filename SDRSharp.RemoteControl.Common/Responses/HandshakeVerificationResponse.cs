@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Yuujin.SDRSharp.RemoteControl.Common.Responses
+namespace SDRSharp.RemoteControl.Common.Responses
 {
     public class HandshakeVerificationResponse : BaseResponse
     {

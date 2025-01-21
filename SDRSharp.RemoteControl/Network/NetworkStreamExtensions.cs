@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.XPath;
 
-namespace Yuujin.SDRSharp.RemoteControl.Network
+namespace SDRSharp.RemoteControl.Network
 {
     public static class NetworkStreamExtensions
     {
