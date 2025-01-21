@@ -32,11 +32,11 @@ then you can follow next instructions...
 
 - Build the project with `dotnet` command:
 	```
-	dotnet build -o bin\		
+	dotnet build -c release -o bin\		
 	```
 - If the build succeeds, then copy only the .dll file to your SDR# installation folder:
 	```
-	robocopy bin\ {SDRSharpPath}\Plugins\Remote Control\ *.dll /s /e
+	robocopy "bin\ " "{SDRSharpPath}\Plugins\Remote Control\ " *.dll /s /e
 	```
 - Launch the SDRSharp and be happy :>
 ---
