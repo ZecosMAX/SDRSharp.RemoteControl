@@ -31,6 +31,8 @@ namespace Yuujin.SDRSharp.RemoteControl.Forms
             _control = control;
             _parent = parentPlugin;
 
+            _socketController!.OnStatusChanged += _socketController_OnStatusChanged;
+
             InitializeComponent();
         }
 
@@ -79,6 +81,17 @@ namespace Yuujin.SDRSharp.RemoteControl.Forms
             }
         }
 
+        private void _socketController_OnStatusChanged(object? sender, EventArgs e)
+        {
+            if (_socketController == null)
+                return;
+
+            if (_socketController.Status.HasFlag(SocketControllerStatus.Stopped)) SetErrorStatus("The server is stopped");
+            if (_socketController.Status.HasFlag(SocketControllerStatus.Active)) SetGoodStatus("The server is active. But not listening for new connections");
+            if (_socketController.Status.HasFlag(SocketControllerStatus.Listening)) SetGoodStatus("The server is active and listening");
+            if (_socketController.Status.HasFlag(SocketControllerStatus.Stopped)) SetGoodStatus("The server is blocking new connections");
+        }
+
         private void startServerButton_Click(object sender, EventArgs e)
         {
             var address = textBox1.Text;
@@ -93,6 +106,7 @@ namespace Yuujin.SDRSharp.RemoteControl.Forms
                 return;
 
             _socketController.StartListen(IPEndPoint.Parse(address));
+            _socketController.IsBlocking = false;
         }
     }
 }

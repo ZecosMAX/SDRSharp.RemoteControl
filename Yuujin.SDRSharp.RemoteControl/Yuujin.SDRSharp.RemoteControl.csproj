@@ -29,21 +29,38 @@
   <ItemGroup>
     <Reference Include="SDRSharp.Common">
       <HintPath>..\Lib\SDRSharp.Common.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SDRSharp.PanView">
       <HintPath>..\Lib\SDRSharp.PanView.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SDRSharp.Radio">
       <HintPath>..\Lib\SDRSharp.Radio.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <None Include=".build-helpers\pre_run_debug.bat" />
+    <None Include=".build-helpers\post_build.bat" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Models\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Yuujin.SDRSharp.RemoteControl.Common\Yuujin.SDRSharp.RemoteControl.Common.csproj">
+      <Private>True</Private>
+      <ReferenceOutputAssembly></ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
+      <IncludeAssets>*</IncludeAssets>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </ProjectReference>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="Call $(ProjectDir)\.build-helpers\post_build.bat $(TargetDir)" />
+  </Target>
 
 </Project>

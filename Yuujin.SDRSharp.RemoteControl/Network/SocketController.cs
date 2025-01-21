@@ -14,15 +14,16 @@ namespace Yuujin.SDRSharp.RemoteControl.Network
     {
         private CancellationTokenSource? _listenerCts;
         private TcpListener? _listener;
+        private bool isBlocking = false;
 
         public event EventHandler OnClientConnected = null!;
         public event EventHandler OnClientDisconnected = null!;
         public event EventHandler OnStatusChanged = null!;
 
         public List<TcpClient> ConnectedClients { get; set; } = [];
-        public bool IsBlocking { get; set; } = false;
 
-        public TcpListener? Listener { get => _listener; set { if (_listener != value) { OnListenerUpdated(_listener, value); _listener = value;  } } }
+        public bool IsBlocking { get => isBlocking; set { UpdateStatus(); isBlocking = value; } }
+        public TcpListener? Listener { get => _listener; set { if (_listener != value) { var oldListener = _listener; _listener = value; OnListenerUpdated(oldListener, value); } } }
         public SocketControllerStatus Status 
         { 
             get
@@ -62,7 +63,6 @@ namespace Yuujin.SDRSharp.RemoteControl.Network
             {
                 _listenerCts?.Cancel();
                 _listenerCts?.Dispose();
-                _listener = null;
 
                 oldListener.Stop();
                 oldListener.Dispose();
@@ -76,22 +76,28 @@ namespace Yuujin.SDRSharp.RemoteControl.Network
                 _ = Task.Run(AcceptTask);
             }
 
+            UpdateStatus();
+        }
+
+        private void UpdateStatus()
+        {
             try
             {
                 OnStatusChanged?.Invoke(this, EventArgs.Empty);
-            } catch { }
+            }
+            catch { }
         }
 
         private async Task AcceptTask()
         {
             try
             {
-                while (true)
+                while (_listenerCts?.IsCancellationRequested == false)
                 {
                     if(Listener == null)
                         return;
 
-                    var client = await Listener.AcceptTcpClientAsync();
+                    var client = await Listener.AcceptTcpClientAsync(_listenerCts.Token);
                     ConnectedClients.Add(client);
 
                     _ = Task.Run(async () => { await RecieveTask(client); });

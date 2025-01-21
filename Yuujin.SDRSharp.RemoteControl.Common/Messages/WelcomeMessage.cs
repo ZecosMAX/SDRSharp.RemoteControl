@@ -12,10 +12,5 @@ namespace Yuujin.SDRSharp.RemoteControl.Common.Messages
         {
             Type = 0;
         }
-
-        public override void InitializeFromByteArray(byte[] array)
-        {
-            base.InitializeFromByteArray(array);
-        }
     }
 }

@@ -33,10 +33,10 @@ namespace Yuujin.SDRSharp.RemoteControl.Plugins
 
         public void Initialize(ISharpControl control)
         {
-            LoadGui();
             _control = control;
-
             Controller = new SocketController();
+
+            LoadGui();
         }
 
         public void Close()
