@@ -46,17 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Yuujin.SDRSharp.RemoteControl.Common\Yuujin.SDRSharp.RemoteControl.Common.csproj">
-      <Private>True</Private>
-      <ReferenceOutputAssembly></ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
-      <IncludeAssets>*</IncludeAssets>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </ProjectReference>
+    <ProjectReference Include="..\SDRSharp.RemoteControl.Common\SDRSharp.RemoteControl.Common.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

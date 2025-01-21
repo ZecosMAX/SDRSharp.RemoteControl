@@ -36,7 +36,7 @@ then you can follow next instructions...
 	```
 - If the build succeeds, then copy only the .dll file to your SDR# installation folder:
 	```
-	copy bin\Yuujin.SDRSharp.RemoteControl.dll {SDRSharpPath}\Plugins
+	robocopy bin\ {SDRSharpPath}\Plugins\Remote Control\ *.dll /s /e
 	```
 - Launch the SDRSharp and be happy :>
 ---
